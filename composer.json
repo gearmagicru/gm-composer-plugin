@@ -1,0 +1,33 @@
+{
+    "name": "gearmagicru/gm-composer-plugin",
+    "description": "Plugin for installing GearMagic application components",
+    "keywords": [
+        "gm",
+        "gearmagic",
+        "composer"
+    ],
+    "homepage": "https://gearmagic.ru",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anton Tivonenko",
+            "email": "anton.tivonenko@gmail.com",
+            "homepage": "https://gearmagic.ru"
+        }
+    ],
+    "require": {
+        "composer-plugin-api": "*"
+      },
+    "require-dev": {
+        "composer/composer": "*"
+    },
+    "autoload": {
+        "psr-4": {"Gm\\ComposerPlugin\\": "src/"}
+    },
+    "extra": {
+        "class": "Gm\\ComposerPlugin\\Plugin"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

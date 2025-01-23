@@ -5,7 +5,7 @@ namespace Gm\ComposerPlugin;
 use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
 
-class Installer extends LibraryInstaller
+abstract class Installer extends LibraryInstaller
 {
     public function supports($packageType)
     {

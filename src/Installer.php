@@ -13,7 +13,7 @@ use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
 
-class Installer implements LibraryInstaller
+class Installer extends LibraryInstaller
 {
     public function supports($packageType)
     {

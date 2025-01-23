@@ -17,4 +17,11 @@ class Installer extends LibraryInstaller
         $name = explode("/", $package->getName());
         return "modules/{$name[1]}TTTTTTT/";
     }
+
+    /**
+     * Implementing the abstract method test()
+     */
+    public function deactivate(){
+        //do something
+    }
 }

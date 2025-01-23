@@ -19,24 +19,17 @@ class Installer implements LibraryInstaller
     {
         return $packageType === 'gm-component';
     }
-/*
+
     public function install(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
         parent::install($repo, $package);
-
-        echo '---------------------------------';
-        $name = explode("/", $package->getName());
-        $this->initInstaller();
     }
 
     public function uninstall(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
-        $name = explode("/", $package->getName());
-        $this->initInstaller();
-
         parent::uninstall($repo, $package);
     }
-*/
+
     public function getInstallPath(PackageInterface $package)
     {
         $name = explode("/", $package->getName());

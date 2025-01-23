@@ -17,6 +17,7 @@
         }
     ],
     "require": {
+        "composer/composer": "*",
         "composer-plugin-api": "*"
       },
     "require-dev": {

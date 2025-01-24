@@ -21,17 +21,6 @@ use Composer\Installer\LibraryInstaller;
 class Installer extends LibraryInstaller
 {
     /**
-     * Тип пакета.
-     * 
-     * - gm-component, модуль, расш. модуля, виджет, плагин;
-     * - gm-lang, локализации;
-     * - gm-theme, темы.
-     * 
-     * @var string 
-     */
-    protected string $packageType = '';
-
-    /**
      * Карта установки пакетов в зависимости от его типа.
      * 
      * @var array
@@ -49,8 +38,7 @@ class Installer extends LibraryInstaller
      */
     public function supports(string $packageType)
     {
-        $this->packageType = $packageType;
-        return $packageType === 'gm-component' || $packageType === 'gm-lang' || $packageType === 'gm-theme';
+        return isset($this->packageTypesMap[$packageType]);
     }
 
     /**
@@ -60,9 +48,12 @@ class Installer extends LibraryInstaller
      */
     public function getInstallPath(PackageInterface $package)
     {
-        echo "\r\nInstall package type \"{$this->packageType}\" for \"{$package->getName()}\".\r\n";
+       /** @var string $packageType Тип пакета: gm-component, gm-lang, gm-theme */
+        $packageType = $package->getType();
+
+        echo "\r\nInstall \"{$packageType}\" for \"{$package->getName()}\".\r\n";
         $basePath = realpath($this->vendorDir . '/..');
-        echo "Base path for gm plugin: \"$basePath\".\r\n";
+        echo "Base path: \"$basePath\".\r\n";
 
         /** @var array $extra */
         $extra = $package->getExtra();
@@ -70,10 +61,10 @@ class Installer extends LibraryInstaller
         $gmExtra = $extra['gm'] ?? [];
 
         /** @var string $pathTemplate Шаблон пути */
-        $pathTemplate = $this->packageTypesMap[$this->packageType];
+        $pathTemplate = $this->packageTypesMap[$packageType];
         if ($pathTemplate) {
             // если компонент (модуль, расш. модуля, виджет, плагин)
-            if ($this->packageType === 'gm-component') {
+            if ($packageType === 'gm-component') {
                 $path = '';
                 if (!empty($gmExtra['path'])) 
                     $path = $gmExtra['path'];
@@ -84,17 +75,21 @@ class Installer extends LibraryInstaller
                         $path = $vendor. '/' . $id;
                     }
                 }
-                if ($path)
-                    return $basePath . str_replace('{name}', $path, $pathTemplate);
-                else
+                if ($path) {
+                    $installPath = $basePath . str_replace('{name}', $path, $pathTemplate);
+                    echo "Install to: \"$installPath\".\r\n";
+                    return $installPath;
+                } else
                     echo "Error: can't get the path from extra.\r\n";
             } else
             // если локализация
-            if ($this->packageType === 'gm-lang') {
-                return $basePath . $pathTemplate;
+            if ($packageType === 'gm-lang') {
+                $installPath = $basePath . $pathTemplate;
+                echo "Install to: \"$installPath\".\r\n";
+                return $installPath;
             } else
             // если тема
-            if ($this->packageType === 'gm-theme') {
+            if ($packageType === 'gm-theme') {
                 $name = $gmExtra['name'] ?? ''; // название темы
                 $type = $gmExtra['type'] ?? ''; // тип темы: 'backend', 'frontend'
                 if ($type === 'frontend') {
@@ -102,7 +97,9 @@ class Installer extends LibraryInstaller
                 }
                 if ($name) {
                     $path = $name . ($type ? '/' . $type : '');
-                    return $basePath . str_replace('{name}', $path, $pathTemplate);
+                    $installPath = $basePath . str_replace('{name}', $path, $pathTemplate);
+                    echo "Install to: \"$installPath\".\r\n";
+                    return $installPath;
                 } else
                     echo "Error: not found property \"name\" in extra.\r\n";
             } else
@@ -110,6 +107,8 @@ class Installer extends LibraryInstaller
         } else
             echo "Error: not found property \"gm\" in extra. \r\n";
 
-        return parent::getInstallPath($package);
+        $installPath = parent::getInstallPath($package);
+        echo "Install to: \"$installPath\".\r\n";
+        return $installPath;
     }
 }

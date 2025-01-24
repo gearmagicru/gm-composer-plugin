@@ -7,10 +7,16 @@ use Composer\Installer\LibraryInstaller;
 
 class Installer extends LibraryInstaller
 {
+    /**
+     * $packageType
+     */
     protected string $packageType = '';
 
-    protected array $packageMap = [
-        'gm-component' => '/modules/gm/{name}'
+    /**
+     * $packageTypesMap
+     */
+    protected array $packageTypesMap = [
+        'gm-component' => '/modules/gm/{name}/'
     ];
 
     /**
@@ -19,7 +25,7 @@ class Installer extends LibraryInstaller
     public function supports(string $packageType)
     {
         $this->packageType = $packageType;
-        return $packageType === 'gm-component';
+        return $packageType === 'gm-component' || $packageType === 'gm-theme' || $packageType === 'gm';
     }
 
     /**
@@ -29,18 +35,34 @@ class Installer extends LibraryInstaller
      */
     public function getInstallPath(PackageInterface $package)
     {
-        print_r($package->getExtra());
-        exit;
-        return "modules/";
+        /** @var array $extra */
+        $extra = $package->getExtra();
+        if (empty($extra['gm'])) {
+            return parent::getInstallPath($package);
+        }
 
-        $this->initializeVendorDir();
+        /** @var array $gmExtra */
+        $gmExtra = $extra['gm'];
+        // если компонент (модуль, расш. модуля, виджет, плагин)
+        if ($this->packageType === 'gm-component') {
+            $template = $this->packageTypesMap[$this->packageType];
+            if ($template) {
+                $path = '';
+                if (!empty($gmExtra['path'])) 
+                    $path = $gmExtra['path'];
+                else {
+                    $id     = $gmExtra['id'] ?? '';
+                    $vendor = $gmExtra['vendor'] ?? 'gm';
+                    if ($id && $vendor) {
+                        $path = $vendor. '/' . $id;
+                    }
+                }
+                if ($path) {
+                    return str_replace('{name}', $path, $template);
+                }
+            }
+        }
 
-        $basePath = ($this->vendorDir ? $this->vendorDir.'/' : '') . $package->getPrettyName();
-        $targetDir = $package->getTargetDir();
-
-        return $basePath . ($targetDir ? '/'.$targetDir : '');
-
-        $name = explode("/", $package->getName());
-        return "modules/{$name[1]}TTTTTTT/";
+        return parent::getInstallPath($package);
     }
 }

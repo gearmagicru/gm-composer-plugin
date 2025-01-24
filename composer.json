@@ -1,6 +1,6 @@
 {
     "name": "gearmagicru/gm-composer-plugin",
-    "description": "Plugin for installing GearMagic application components",
+    "description": "Composer plugin for installing components, themes and libraries of the GearMagic web application",
     "keywords": [
         "gm",
         "gearmagic",
@@ -8,7 +8,7 @@
     ],
     "homepage": "https://gearmagic.ru",
     "type": "composer-plugin",
-    "license": "MIT",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Anton Tivonenko",

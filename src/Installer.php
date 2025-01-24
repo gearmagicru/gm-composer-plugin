@@ -60,19 +60,15 @@ class Installer extends LibraryInstaller
      */
     public function getInstallPath(PackageInterface $package)
     {
+        echo "\r\nInstall package type \"{$this->packageType}\" for \"{$package->getName()}\".\r\n";
         $basePath = realpath($this->vendorDir . '/..');
-        echo "Base path for gm plugin: $basePath. ";
+        echo "Base path for gm plugin: \"$basePath\".\r\n";
 
         /** @var array $extra */
         $extra = $package->getExtra();
-        if (empty($extra['gm'])) {
-            echo 'Error: not found property "gm" in extra. ';
-
-            return parent::getInstallPath($package);
-        }
-
         /** @var array $gmExtra */
-        $gmExtra = $extra['gm'];
+        $gmExtra = $extra['gm'] ?? [];
+
         /** @var string $pathTemplate Шаблон пути */
         $pathTemplate = $this->packageTypesMap[$this->packageType];
         if ($pathTemplate) {
@@ -91,7 +87,7 @@ class Installer extends LibraryInstaller
                 if ($path)
                     return $basePath . str_replace('{name}', $path, $pathTemplate);
                 else
-                    echo 'Error: can\'t get the path from extra';
+                    echo "Error: can't get the path from extra.\r\n";
             } else
             // если локализация
             if ($this->packageType === 'gm-lang') {
@@ -108,11 +104,11 @@ class Installer extends LibraryInstaller
                     $path = $name . ($type ? '/' . $type : '');
                     return $basePath . str_replace('{name}', $path, $pathTemplate);
                 } else
-                    echo 'Error: not found property "name" in extra. ';
+                    echo "Error: not found property \"name\" in extra.\r\n";
             } else
-                echo 'Warning: not apply plugin to package type. ';
+                echo "Warning: not apply plugin to package type.\r\n";
         } else
-            echo 'Error: not found property "gm" in extra. ';
+            echo "Error: not found property \"gm\" in extra. \r\n";
 
         return parent::getInstallPath($package);
     }

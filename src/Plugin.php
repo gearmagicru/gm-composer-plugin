@@ -1,14 +1,28 @@
 <?php
+/**
+ * Этот файл является частью пакета GM ComposerPlugin.
+ * 
+ * @see https://gearmagic.ru/framework/
+ * @copyright Copyright (c) 2015 Веб-студия GearMagic
+ * @license https://gearmagic.ru/license/
+ */
+
 namespace Gm\ComposerPlugin;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 
+/**
+ * Класс плагина Composer.
+ * 
+ * @author Anton Tivonenko <anton.tivonenko@gmail.com>
+ * @package Gm\ComposerPlugin
+ */
 class Plugin implements PluginInterface
 {
     /**
-     * Apply plugin modifications to Composer
+     * Применяет модификации плагина к Composer.
      *
      * @return void
      */
@@ -18,11 +32,11 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * Remove any hooks from Composer
+     * Удаляет все хуки из Composer.
      *
-     * This will be called when a plugin is deactivated before being
-     * uninstalled, but also before it gets upgraded to a new version
-     * so the old one can be deactivated and the new one activated.
+     * Вызывается, когда плагин деактивируется перед удалением, но также и перед 
+     * обновлением до новой версии, чтобы можно было деактивировать старый и 
+     * активировать новый.
      *
      * @return void
      */
@@ -31,9 +45,9 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * Prepare the plugin to be uninstalled
+     * Подготавливает плагин к удалению.
      *
-     * This will be called after deactivate.
+     * Это будет вызвано после деактивации.
      *
      * @return void
      */

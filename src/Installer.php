@@ -29,7 +29,7 @@ class Installer extends LibraryInstaller
         'gm-component' => '/modules/{name}/',
         'gm-lang'      => '/lang/',
         'gm-theme'     => '/public/themes/{name}/',
-        'skeleton'     => ''
+        'skeleton'     => '/'
     ];
 
     /**
@@ -112,7 +112,7 @@ class Installer extends LibraryInstaller
             } else
                 echo "Warning: not apply plugin to package type.\r\n";
         } else
-            echo "Error: not found property \"gm\" in extra. \r\n";
+            echo "Error: not found path template. \r\n";
 
         $installPath = parent::getInstallPath($package);
         echo "Install to: \"$installPath\".\r\n";

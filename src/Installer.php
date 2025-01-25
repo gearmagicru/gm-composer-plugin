@@ -28,7 +28,8 @@ class Installer extends LibraryInstaller
     protected array $packageTypesMap = [
         'gm-component' => '/modules/{name}/',
         'gm-lang'      => '/lang/',
-        'gm-theme'     => '/public/themes/{name}/'
+        'gm-theme'     => '/public/themes/{name}/',
+        'skeleton'     => ''
     ];
 
     /**
@@ -84,6 +85,12 @@ class Installer extends LibraryInstaller
             } else
             // если локализация
             if ($packageType === 'gm-lang') {
+                $installPath = $basePath . $pathTemplate;
+                echo "Install to: \"$installPath\".\r\n";
+                return $installPath;
+            } else
+            // если локализация
+            if ($packageType === 'skeleton') {
                 $installPath = $basePath . $pathTemplate;
                 echo "Install to: \"$installPath\".\r\n";
                 return $installPath;

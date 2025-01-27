@@ -28,7 +28,8 @@ class Installer extends LibraryInstaller
     protected array $packageTypesMap = [
         'component' => '/modules/{name}/',
         'lang'      => '/lang/',
-        'theme'     => '/public/themes/{name}/'
+        'theme'     => '/public/themes/{name}/',
+        'skeleton'  => '/'
     ];
 
     /**
@@ -82,6 +83,13 @@ class Installer extends LibraryInstaller
                 } else
                     $this->io->write("Error: can't get the path from extra.");
             } else
+            // если skeleton
+            if ($packageType === 'skeleton') {
+                $installPath = $basePath . $pathTemplate;
+                $this->io->write("Install to: \"$installPath\".");
+                return $installPath;
+
+            } else
             // если локализация
             if ($packageType === 'lang') {
                 $installPath = $basePath . $pathTemplate;
@@ -105,7 +113,7 @@ class Installer extends LibraryInstaller
             } else
                 $this->io->write("Warning: not apply plugin to package type.");
         } else
-            $this->io->write("Error: not found property \"gm\" in extra.");
+            $this->io->write("Error: not found in types map.");
 
         $installPath = parent::getInstallPath($package);
         $this->io->write("Install to: \"$installPath\".");

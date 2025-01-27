@@ -26,10 +26,9 @@ class Installer extends LibraryInstaller
      * @var array
      */
     protected array $packageTypesMap = [
-        'gm-component' => '/modules/{name}/',
-        'gm-lang'      => '/lang/',
-        'gm-theme'     => '/public/themes/{name}/',
-        'skeleton'     => '/'
+        'component' => '/modules/{name}/',
+        'lang'      => '/lang/',
+        'theme'     => '/public/themes/{name}/'
     ];
 
     /**
@@ -52,9 +51,9 @@ class Installer extends LibraryInstaller
        /** @var string $packageType Тип пакета: gm-component, gm-lang, gm-theme */
         $packageType = $package->getType();
 
-        echo "\r\nInstall \"{$packageType}\" for \"{$package->getName()}\".\r\n";
+        $this->io->write("Install \"{$packageType}\" for \"{$package->getName()}\"");
         $basePath = realpath($this->vendorDir . '/..');
-        echo "Base path: \"$basePath\".\r\n";
+        $this->io->write("Base path: \"$basePath\".");
 
         /** @var array $extra */
         $extra = $package->getExtra();
@@ -65,7 +64,7 @@ class Installer extends LibraryInstaller
         $pathTemplate = $this->packageTypesMap[$packageType];
         if ($pathTemplate) {
             // если компонент (модуль, расш. модуля, виджет, плагин)
-            if ($packageType === 'gm-component') {
+            if ($packageType === 'component') {
                 $path = '';
                 if (!empty($gmExtra['path'])) 
                     $path = $gmExtra['path'];
@@ -78,25 +77,19 @@ class Installer extends LibraryInstaller
                 }
                 if ($path) {
                     $installPath = $basePath . str_replace('{name}', $path, $pathTemplate);
-                    echo "Install to: \"$installPath\".\r\n";
+                    $this->io->write("Install to: \"$installPath\".");
                     return $installPath;
                 } else
-                    echo "Error: can't get the path from extra.\r\n";
+                    $this->io->write("Error: can't get the path from extra.");
             } else
             // если локализация
-            if ($packageType === 'gm-lang') {
+            if ($packageType === 'lang') {
                 $installPath = $basePath . $pathTemplate;
-                echo "Install to: \"$installPath\".\r\n";
-                return $installPath;
-            } else
-            // если локализация
-            if ($packageType === 'skeleton') {
-                $installPath = $basePath . $pathTemplate;
-                echo "Install to: \"$installPath\".\r\n";
+                $this->io->write("Install to: \"$installPath\".");
                 return $installPath;
             } else
             // если тема
-            if ($packageType === 'gm-theme') {
+            if ($packageType === 'theme') {
                 $name = $gmExtra['name'] ?? ''; // название темы
                 $type = $gmExtra['type'] ?? ''; // тип темы: 'backend', 'frontend'
                 if ($type === 'frontend') {
@@ -105,17 +98,17 @@ class Installer extends LibraryInstaller
                 if ($name) {
                     $path = $name . ($type ? '/' . $type : '');
                     $installPath = $basePath . str_replace('{name}', $path, $pathTemplate);
-                    echo "Install to: \"$installPath\".\r\n";
+                    $this->io->write("Install to: \"$installPath\".");
                     return $installPath;
                 } else
-                    echo "Error: not found property \"name\" in extra.\r\n";
+                    $this->io->write("Error: not found property \"name\" in extra.");
             } else
-                echo "Warning: not apply plugin to package type.\r\n";
+                $this->io->write("Warning: not apply plugin to package type.");
         } else
-            echo "Error: not found path template. \r\n";
+            $this->io->write("Error: not found property \"gm\" in extra.");
 
         $installPath = parent::getInstallPath($package);
-        echo "Install to: \"$installPath\".\r\n";
+        $this->io->write("Install to: \"$installPath\".");
         return $installPath;
     }
 }

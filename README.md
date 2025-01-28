@@ -17,6 +17,15 @@
 ```
 {"type" : "skeleton", ... }
 ```
+- один из компонентов или библиотек GM
+```
+{"type" : "gm", ... }
+```
+где в разделе "extra" можно указать путь установки, например
+```
+{"extra" : {"gm": {"path": "/public/vendors/gm/panel"} } }
+```
+
 а в раздел <b>"require"</b> добавить `"gearmagicru/gm-composer-plugin": "*"`.
 
 

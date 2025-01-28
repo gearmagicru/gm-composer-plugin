@@ -29,7 +29,8 @@ class Installer extends LibraryInstaller
         'component' => '/modules/{name}/',
         'lang'      => '/lang/',
         'theme'     => '/public/themes/{name}/',
-        'skeleton'  => '/'
+        'skeleton'  => '/',
+        'gm'        => '/'
     ];
 
     /**
@@ -64,6 +65,13 @@ class Installer extends LibraryInstaller
         /** @var string $pathTemplate Шаблон пути */
         $pathTemplate = $this->packageTypesMap[$packageType];
         if ($pathTemplate) {
+            // если один из компонентов gm
+            if ($packageType === 'gm') {
+                $path = empty($gmExtra['path']) ? $pathTemplate : $gmExtra['path'];
+                $installPath = $basePath . $path;
+                $this->io->write("Install to: \"$installPath\".");
+                return $installPath;
+            } else
             // если компонент (модуль, расш. модуля, виджет, плагин)
             if ($packageType === 'component') {
                 $path = '';

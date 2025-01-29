@@ -1,0 +1,10 @@
+# Автоматическое определение текстовых файлов
+* text=auto eol=lf
+
+# ...Если имя не соответствует следующим основным шаблонам
+
+# Игнорировать некоторые метафайлы при создании архива этого репозитория
+/.github        export-ignore
+/.editorconfig  export-ignore
+/.gitattributes export-ignore
+/.gitignore     export-ignore

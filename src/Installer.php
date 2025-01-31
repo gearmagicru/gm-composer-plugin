@@ -112,7 +112,7 @@ class Installer extends LibraryInstaller
                     $type = '';
                 }
                 if ($name) {
-                    $path = $name . ($type ? '/' . $type : '');
+                    $path = ($type ? '/' . $type : '') . '/' . $name;
                     $installPath = $basePath . str_replace('{name}', $path, $pathTemplate);
                     $this->io->write("Install to: \"$installPath\".");
                     return $installPath;

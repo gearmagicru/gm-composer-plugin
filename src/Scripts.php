@@ -52,7 +52,7 @@ class Scripts
         $composer = $event->getComposer();
 
         static::$appPath = realpath(rtrim($composer->getConfig()->get('vendor-dir'), '/') . '/..');
-        static::$installPath = static::$appPath . '/.replace';
+        static::$installPath = static::$appPath . '/.install';
         if (file_exists(static::$installPath)) {
             $filename = static::$installPath . '/package.json';
             if (file_exists($filename)) {

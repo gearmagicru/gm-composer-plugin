@@ -30,7 +30,8 @@ class Installer extends LibraryInstaller
         'lang'      => '/lang/',
         'theme'     => '/public/themes/{name}/',
         'skeleton'  => '/',
-        'gm'        => '/'
+        'gm'        => '/',
+        'library'   => '/vendor/{name}'
     ];
 
     /**
@@ -65,6 +66,19 @@ class Installer extends LibraryInstaller
         /** @var string $pathTemplate Шаблон пути */
         $pathTemplate = $this->packageTypesMap[$packageType];
         if ($pathTemplate) {
+            // если библиотека
+            if ($packageType === 'library') {
+                if (empty($gmExtra))
+                    $installPath = parent::getInstallPath($package);
+                else
+                if (!empty($gmExtra['path']))
+                    $installPath = $basePath . $gmExtra['path'];
+                else
+                if (!empty($gmExtra['name']))
+                    $installPath = $basePath . str_replace('{name}', $gmExtra['name'], $pathTemplate);
+                $this->io->write("Install to: \"$installPath\".");
+                return $installPath;
+            } else
             // если один из компонентов gm
             if ($packageType === 'gm') {
                 $path = empty($gmExtra['path']) ? $pathTemplate : $gmExtra['path'];
@@ -89,14 +103,13 @@ class Installer extends LibraryInstaller
                     $this->io->write("Install to: \"$installPath\".");
                     return $installPath;
                 } else
-                    $this->io->write("Error: can't get the path from extra.");
+                    $this->io->write("Warning: can't get the path from extra.");
             } else
             // если skeleton
             if ($packageType === 'skeleton') {
                 $installPath = $basePath . $pathTemplate;
                 $this->io->write("Install to: \"$installPath\".");
                 return $installPath;
-
             } else
             // если локализация
             if ($packageType === 'lang') {

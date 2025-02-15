@@ -1,11 +1,7 @@
 {
     "name": "gearmagicru/gm-composer-plugin",
     "description": "Composer plugin for installing components, themes and libraries of the GearMagic web application",
-    "keywords": [
-        "gm",
-        "gearmagic",
-        "composer"
-    ],
+    "keywords": ["gearmagic", "gm-composer", "composer", "plugin"],
     "homepage": "https://gearmagic.ru",
     "type": "composer-plugin",
     "license": "BSD-3-Clause",

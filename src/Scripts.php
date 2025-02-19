@@ -195,15 +195,16 @@ class Scripts
             $dir = $to . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
             if ($item->isDir()) {
                 if (!file_exists($dir)) {
-                    if (mkdir($dir))
-                        $io->write("--> make dir \"$item\".");
-                    else
+                    if (mkdir($dir)) {
+                        $io->write('make dir: ' . str_replace(static::$appPath, '', $item));
+                    } else
                         $io->write('Error: can\'t make dir "' . $dir . '".');
                 }
             } else {
-                if (copy($item, $dir))
-                    $io->write("--> from \"$item\" to \"$dir\".");
-                else
+                if (copy($item, $dir)) {
+                    $io->write('copy: ' . str_replace(static::$appPath, '', $item));
+                    $io->write('  to: ' . str_replace(static::$appPath, '', $dir));
+                } else
                     $io->write('Error: can\'t copy file "' . $item . '".');
             }
         }
@@ -219,7 +220,8 @@ class Scripts
      */
     static protected function copyInstallFiles(array $items, $io): void
     {
-        $io->write("Copy install files: ");
+        $io->write("*** Copy install files ***");
+        $io->write('');
         foreach ($items as $item) {
             $from = static::$installPath . $item[0];
             if (!file_exists($from)) {
@@ -233,8 +235,10 @@ class Scripts
             } else {
                 if (!copy($from, $to))
                     $io->write('Error: can\'t copy file "' . $from . '".');
-                else
-                    $io->write("--> from \"$from\" to \"$to\".");
+                else {
+                    $io->write('copy: ' . str_replace(static::$appPath, '', $from));
+                    $io->write('  to: ' . str_replace(static::$appPath, '', $to));
+                }
             }
         }
     }

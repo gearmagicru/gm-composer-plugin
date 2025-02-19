@@ -12,6 +12,7 @@ namespace Gm\ComposerPlugin;
 use Composer\Script\Event;
 use Composer\IO\IOInterface;
 use Composer\Installer\PackageEvent;
+use FilesystemIterator;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
@@ -38,6 +39,80 @@ class Scripts
      * @param string
      */
     static string $installPath = '';
+
+    /**
+     * Событие после выполнения команды "app-deploy".
+     *
+     * @return void
+     */
+    static public function appDeploy(Event $event): void
+    {
+        /** @var IOInterface $io */
+        $io = $event->getIO();
+        /** @var \Composer\Composer $composer  */
+        $composer = $event->getComposer();
+
+        $basePath = realpath(rtrim($composer->getConfig()->get('vendor-dir'), '/') . '/..');
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($basePath, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        $counter = array_fill_keys(
+            [
+                'readme.md', 'info.md', 'license.md', 'changelog.md', 'security.md', 'roadmap.md', 'contributing.md', 'contributors.md',
+                'license.txt', 'changelog.txt', 'security.txt',
+                '.editorconfig', '.gitignore', '.gitattributes', 
+                'composer.json', 'composer.lock',
+                'readme', 'info', 'license', 'changelog', 'install', 'commitment', 'dockerfile'
+            ],
+        0);
+
+        $installPath = $basePath . '/.install';
+        if (file_exists($installPath)) {
+            $io->write('*** Deleting files (.install) ***');
+            static::deleteDir($installPath);
+            $io->write('deleted: ' . $installPath);
+            $io->write('');
+        }
+
+        $io->write('*** Deleting Git Repository Files ***');
+        $io->write('');
+        $index = 1;
+        $errors = [];
+        foreach ($iterator as $item) {
+            if ($item->isFile()) { 
+                $name = $item->getFilename();
+                $check = strtolower($name);
+                if (isset($counter[$check])) {
+                    $counter[$check] = $counter[$check] + 1;
+                    $filename = $item->getPath() . '/' . $name;
+                    if (unlink($filename))
+                        $io->write('deleted (' . ($index++) . '): ' . str_replace($basePath, '', $item->getPath()) . '/' .  $name);
+                    else
+                        $errors[] = str_replace($basePath, '', $item->getPath()) . '/' .  $name;
+                }
+            }
+        }
+
+        if ($errors) {
+            $io->write('');
+            $io->write('*** File deletion errors ***');
+            $io->write('');
+            foreach ($errors as $name) {
+                $io->write('delete error: ' . $name);
+            }
+        }
+
+        $totals = [];
+        foreach ($counter as $name => $value) {
+            if ($value > 0) $totals[] = "$name ($value)";
+        }
+        $io->write('');
+        $io->write('*** Total files deleted ***');
+        $io->write('');
+        $io->write(implode(', ', $totals));
+    }
 
     /**
      * Событие после выполнения команды "app-install".
@@ -68,6 +143,30 @@ class Scripts
                 $io->write('Error: file "' . $filename . '" not found.');
         } else
             $io->write('Warning: path "' . static::$installPath . '" not found.');
+    }
+
+    /**
+     * Удаление каталога с файлами.
+     * 
+     * @param string $dir
+     * 
+     * @return void
+     */
+    static protected function deleteDir(string $dir): void
+    {
+        $iterator = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
+     
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                rmdir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        if (file_exists($dir)) {
+            rmdir($dir);
+        }
     }
 
     /**

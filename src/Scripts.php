@@ -138,11 +138,11 @@ class Scripts
                         static::copyInstallFiles($config['copy'], $io);
                     }
                 } else
-                    $io->write('Error: can\'t read install.json.');
+                    $io->write('error: can\'t read install.json.');
             } else
-                $io->write('Error: file "' . $filename . '" not found.');
+                $io->write('error: file "' . $filename . '" not found.');
         } else
-            $io->write('Warning: path "' . static::$installPath . '" not found.');
+            $io->write('warning: path "' . static::$installPath . '" not found.');
     }
 
     /**
@@ -182,7 +182,7 @@ class Scripts
     {
         if (!file_exists($to)) {
             if (!mkdir($to, 0755)) {
-                $io->write('Error: can\'t make dir "' . $to . '".');
+                $io->write('error: can\'t make dir "' . $to . '".');
                 return;
             }
         }
@@ -198,14 +198,14 @@ class Scripts
                     if (mkdir($dir)) {
                         $io->write('make dir: ' . str_replace(static::$appPath, '', $item));
                     } else
-                        $io->write('Error: can\'t make dir "' . $dir . '".');
+                        $io->write('error: can\'t make dir "' . $dir . '".');
                 }
             } else {
                 if (copy($item, $dir)) {
                     $io->write('copy: ' . str_replace(static::$appPath, '', $item));
                     $io->write('  to: ' . str_replace(static::$appPath, '', $dir));
                 } else
-                    $io->write('Error: can\'t copy file "' . $item . '".');
+                    $io->write('error: can\'t copy file "' . $item . '".');
             }
         }
     }
@@ -220,12 +220,12 @@ class Scripts
      */
     static protected function copyInstallFiles(array $items, $io): void
     {
-        $io->write("*** Copy install files ***");
         $io->write('');
+        $io->write("*** Copy install files ***");
         foreach ($items as $item) {
             $from = static::$installPath . $item[0];
             if (!file_exists($from)) {
-                $io->write('Error: can\'t copy file "' . $from . '".');
+                $io->write('error: can\'t copy file "' . $from . '".');
             }
             $to = static::$appPath . $item[1];
             // если каталог
@@ -234,7 +234,7 @@ class Scripts
             // если файл
             } else {
                 if (!copy($from, $to))
-                    $io->write('Error: can\'t copy file "' . $from . '".');
+                    $io->write('error: can\'t copy file "' . $from . '".');
                 else {
                     $io->write('copy: ' . str_replace(static::$appPath, '', $from));
                     $io->write('  to: ' . str_replace(static::$appPath, '', $to));

@@ -54,7 +54,7 @@ class Installer extends LibraryInstaller
        /** @var string $packageType Тип пакета: gm-component, gm-lang, gm-theme */
         $packageType = $package->getType();
 
-        $this->io->write('*** ' . ucfirst($packageType) . ' - "' . $package->getName() . '" ***');
+        $this->io->write('*** ' . ucfirst($packageType) . ' "' . $package->getName() . '" ***');
         $basePath = realpath($this->vendorDir . '/..');
 
         /** @var array $extra */
@@ -75,7 +75,7 @@ class Installer extends LibraryInstaller
                 else
                 if (!empty($gmExtra['name']))
                     $installPath = $basePath . str_replace('{name}', $gmExtra['name'], $pathTemplate);
-                $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                $this->io->write('install to: ' . str_replace($basePath, '', $installPath));
                 $this->io->write('');
                 return $installPath;
             } else
@@ -83,7 +83,7 @@ class Installer extends LibraryInstaller
             if ($packageType === 'gm') {
                 $path = empty($gmExtra['path']) ? $pathTemplate : $gmExtra['path'];
                 $installPath = $basePath . $path;
-                $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                $this->io->write('install to: ' . str_replace($basePath, '', $installPath));
                 $this->io->write('');
                 return $installPath;
             } else
@@ -101,24 +101,23 @@ class Installer extends LibraryInstaller
                 }
                 if ($path) {
                     $installPath = $basePath . str_replace('{name}', $path, $pathTemplate);
-                    $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                    $this->io->write('install to: ' . str_replace($basePath, '', $installPath));
                     $this->io->write('');
                     return $installPath;
                 } else {
                     $this->io->write("warning: can't get the path from extra.");
-                    $this->io->write('');
                 }
             } else
             // если skeleton
             if ($packageType === 'skeleton') {
                 $installPath = $basePath . $pathTemplate;
-                $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                $this->io->write('install to: ' . $installPath);
                 return $installPath;
             } else
             // если локализация
             if ($packageType === 'lang') {
                 $installPath = $basePath . $pathTemplate;
-                $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                $this->io->write('install to: ' . str_replace($basePath, '', $installPath));
                 $this->io->write('');
                 return $installPath;
             } else

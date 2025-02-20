@@ -54,9 +54,8 @@ class Installer extends LibraryInstaller
        /** @var string $packageType Тип пакета: gm-component, gm-lang, gm-theme */
         $packageType = $package->getType();
 
-        $this->io->write("Install \"{$packageType}\" for \"{$package->getName()}\"");
+        $this->io->write('*** ' . ucfirst($packageType) . ' - "' . $package->getName() . '" ***');
         $basePath = realpath($this->vendorDir . '/..');
-        $this->io->write("Base path: \"$basePath\".");
 
         /** @var array $extra */
         $extra = $package->getExtra();
@@ -76,14 +75,16 @@ class Installer extends LibraryInstaller
                 else
                 if (!empty($gmExtra['name']))
                     $installPath = $basePath . str_replace('{name}', $gmExtra['name'], $pathTemplate);
-                $this->io->write("Install to: \"$installPath\".");
+                $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                $this->io->write('');
                 return $installPath;
             } else
             // если один из компонентов gm
             if ($packageType === 'gm') {
                 $path = empty($gmExtra['path']) ? $pathTemplate : $gmExtra['path'];
                 $installPath = $basePath . $path;
-                $this->io->write("Install to: \"$installPath\".");
+                $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                $this->io->write('');
                 return $installPath;
             } else
             // если компонент (модуль, расш. модуля, виджет, плагин)
@@ -100,21 +101,25 @@ class Installer extends LibraryInstaller
                 }
                 if ($path) {
                     $installPath = $basePath . str_replace('{name}', $path, $pathTemplate);
-                    $this->io->write("Install to: \"$installPath\".");
+                    $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                    $this->io->write('');
                     return $installPath;
-                } else
-                    $this->io->write("Warning: can't get the path from extra.");
+                } else {
+                    $this->io->write("warning: can't get the path from extra.");
+                    $this->io->write('');
+                }
             } else
             // если skeleton
             if ($packageType === 'skeleton') {
                 $installPath = $basePath . $pathTemplate;
-                $this->io->write("Install to: \"$installPath\".");
+                $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
                 return $installPath;
             } else
             // если локализация
             if ($packageType === 'lang') {
                 $installPath = $basePath . $pathTemplate;
-                $this->io->write("Install to: \"$installPath\".");
+                $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                $this->io->write('');
                 return $installPath;
             } else
             // если тема
@@ -127,17 +132,22 @@ class Installer extends LibraryInstaller
                 if ($name) {
                     $path = ($type ? '/' . $type : '') . '/' . $name;
                     $installPath = $basePath . str_replace('{name}', $path, $pathTemplate);
-                    $this->io->write("Install to: \"$installPath\".");
+                    $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+                    $this->io->write('');
                     return $installPath;
-                } else
-                    $this->io->write("Error: not found property \"name\" in extra.");
-            } else
-                $this->io->write("Warning: not apply plugin to package type.");
-        } else
-            $this->io->write("Error: not found in types map.");
+                } else {
+                    $this->io->write("error: not found property \"name\" in extra.");
+                }
+            } else {
+                $this->io->write("warning: not apply plugin to package type.");
+            }
+        } else {
+            $this->io->write("error: not found in types map.");
+        }
 
         $installPath = parent::getInstallPath($package);
-        $this->io->write("Install to: \"$installPath\".");
+        $this->io->write('install to: "' . str_replace($basePath, '', $installPath));
+        $this->io->write('');
         return $installPath;
     }
 }

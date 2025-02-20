@@ -112,6 +112,7 @@ class Installer extends LibraryInstaller
             if ($packageType === 'skeleton') {
                 $installPath = $basePath . $pathTemplate;
                 $this->io->write('install to: ' . $installPath);
+                $this->io->write('');
                 return $installPath;
             } else
             // если локализация
